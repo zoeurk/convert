@@ -12,6 +12,7 @@ DRYRUN=0
 #TRACK=
 #TITLE=""
 #META="-t COMMENT='' -t COMMENT=''"
+test ! -d ~/Music_ && mkdit ~/Music_
 while getopts "RPd:g:s:" value
 do
  case $value
@@ -77,8 +78,8 @@ in
   	printf "error: INFILE:$INFILE\nALBUM:$ALBUM\nYEAR:$YEAR\nTRACK:$TRACK\nTITLE:$TITLE\n"
 	exit
   fi
-  test -d ~/Music_/"$ARTIST" || mkdir Music_/"$ARTIST"
-  test -d ~/Music_/"$ARTIST"/"$YEAR - $ALBUM" || mkdir Music_/"$ARTIST"/"$YEAR - $ALBUM"
+  test -d ~/Music_/"$ARTIST" || mkdir ~/Music_/"$ARTIST"
+  test -d ~/Music_/"$ARTIST"/"$YEAR - $ALBUM" || mkdir ~/Music_/"$ARTIST"/"$YEAR - $ALBUM"
   if test -n "$DISC"
   then
   	if [ -n "$(printf $DISC | grep -e "^[0-9]*$")" ]
@@ -92,7 +93,7 @@ in
   fi
   if [ -z "$DISC" ]
   then
-   if test ! -e Music_/"$ARTIST/$YEAR - $ALBUM/$TRACK - $TITLE".ogg
+   if test ! -e ~/Music_/"$ARTIST/$YEAR - $ALBUM/$TRACK - $TITLE".ogg
    then
    	printf "$INFILE\n" 1>&2
  	test -e "$DIR/track.*" && rm -fv $DIR/track.*
@@ -114,7 +115,7 @@ in
 	printf "################################\n"
  	vorbiscomment -w -c $DIR/comments.txt $DIR/track.ogg || exit
  	mv -i -v $DIR/track.ogg \
- 		Music_/"$ARTIST"/"$YEAR - $ALBUM"/"$TRACK - $TITLE".ogg || exit
+ 		~/Music_/"$ARTIST"/"$YEAR - $ALBUM"/"$TRACK - $TITLE".ogg || exit
    else
    	printf \
  		"Le fichier:Music_/$ARTIST/$YEAR - $ALBUM/$TRACK - $TITLE.ogg exist\n" \
@@ -152,10 +153,10 @@ in
  	if [ -n "$(printf "$DISC" | grep -e '^[0-9]*$')" ]
 	then
 		mv -i -v $DIR/track.ogg \
- 			Music_/"$ARTIST"/"$YEAR - $ALBUM"/CD${DISC}/"$TRACK - $TITLE".ogg || exit
+ 			~/Music_/"$ARTIST"/"$YEAR - $ALBUM"/CD${DISC}/"$TRACK - $TITLE".ogg || exit
 	else
 		mv -i -v $DIR/track.ogg \
-			Music_/"$ARTIST"/"$YEAR - $ALBUM"/"${DISC}"/"$TRACK - $TITLE".ogg
+			~/Music_/"$ARTIST"/"$YEAR - $ALBUM"/"${DISC}"/"$TRACK - $TITLE".ogg
 	fi
    else
   	printf \
