@@ -12,7 +12,6 @@ DRYRUN=0
 #TRACK=
 #TITLE=""
 #META="-t COMMENT='' -t COMMENT=''"
-test ! -d ~/Music_ && mkdit ~/Music_
 while getopts "RPd:g:s:" value
 do
  case $value
