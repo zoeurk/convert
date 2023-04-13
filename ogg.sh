@@ -74,7 +74,7 @@ in
   fi
   if [ -z "$ALBUM" -o -z "$YEAR" -o -z "$TRACK" -o -z "$TITLE" ]
   then
-  	printf "error: INFILE:$INFILE\nALBUM:$ALBUM\nYEAR:$YEAR\nTRACK:$TRACK\nTITLE:$TITLE\n"
+  	printf "error: $FALSE::INFILE:$INFILE\nALBUM:$ALBUM\nYEAR:$YEAR\nTRACK:$TRACK\nTITLE:$TITLE\n"
 	exit
   fi
   test -d ~/Music_/"$ARTIST" || mkdir ~/Music_/"$ARTIST"
