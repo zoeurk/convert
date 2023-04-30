@@ -58,6 +58,11 @@ do
 	if [ -e "${CUEFILE%*.cue}.flac" ]
 	then
 		cuebreakpoints "$LINE" >$DIR/breakpoints.txt
+		if test ! -s $DIR/breakpoints.txt
+		then
+			echo "$CUEFILE" >> not_encoded.txt
+		       	continue
+		fi
 		cueprint "$LINE" | sed -n '/^\(track number\|perfomer\|title\):[\t ]/p' >$DIR/songs.txt
 		sed 's@/\(.*\)@ (\1)@' -i $DIR/songs.txt
 		ALBUM=`head -n 1 $DIR/songs.txt | sed 's/title:[ \t]*//'`
@@ -76,7 +81,7 @@ do
 				YEARS=`echo $CUEFILE | sed 's@^.*/\([0-9]*\( - [0-9]*\)\?\) .*$@\1@'`
 				if test -z "$TRACK" -o -z "$ARTIST" -o -z "$TITLE" -o -z "$YEARS" -o -z "$ALBUM"
 				then
-					printf "Erreur:\nTrack = $TRACK\nArtist = $ARTIST\nAlbum=$ALBUM\nTITLE= $TITLE\nYEAR =$YEARS\n";
+					printf "Erreur:\nTrack = $TRACK\nArtist = $ARTIST\nAlbum=$ALBUM\nTITLE= $TITLE\nYEAR =$YEARS\nFichier:$CUEFILE\n";
 					exit
 				fi
 				sed '1,3d' -i $DIR/songs.txt
@@ -102,7 +107,7 @@ do
 				YEARS=`echo $CUEFILE | sed 's@^.*/\([0-9]*\( - [0-9]*\)\?\) .*$@\1@'`
 				if test -z "$TRACK" -o -z "$ARTIST" -o -z "$TITLE" -o -z "$YEARS" -o -z "$ALBUM"
 				then
-					printf "Erreur:\nTrack = $TRACK\nArtist = $ARTIST\nAlbum=$ALBUM\nTITLE= $TITLE\nYEAR =$YEARS\n";
+					printf "Erreur:LEN = $LEN\nTrack = $TRACK\nArtist = $ARTIST\nAlbum=$ALBUM\nTITLE= $TITLE\nYEAR =$YEARS\nFichier:$CUEFILE\n";
 					exit
 				fi
 				sed '1,3d' -i $DIR/songs.txt
@@ -131,7 +136,6 @@ do
 				encode 1 $DURATION "$START" "${CUEFILE%*.cue}.flac" "$OUTDIR"/"$ARTIST - $YEARS - $ALBUM - $TRACK - $TITLE.ogg"
 			fi
 		done
-		cat $DIR/songs.txt
 		YEARS=`echo $CUEFILE | sed 's@^.*/\([0-9]*\( - [0-9]*\)\?\) .*$@\1@'`
 		MIN=${END%:*}
 		SEC=${END#$MIN:}
@@ -139,7 +143,7 @@ do
 		MIL=${END##*.}
 		if test -z "$TRACK" -o -z "$ARTIST" -o -z "$TITLE" -o -z "$YEARS" -o -z "$ALBUM"
 		then
-			printf "Erreur:\nTrack = $TRACK\nArtist = $ARTIST\nAlbum=$ALBUM\nTITLE= $TITLE\nYEAR =$YEARS\n";
+			printf "Erreur:\nTrack = $TRACK\nArtist = $ARTIST\nAlbum=$ALBUM\nTITLE= $TITLE\nYEAR =$YEARS\nFichier:$CUEFILE\n";
 			exit
 		fi
 		sed -e "s/HEURE/0/" -e "s/SCS/$SEC/" -e "s/MINUTES/$MIN/" -e "s/MILLISECONDS/$MIL/" -i.bak $DIR/bc.script1
